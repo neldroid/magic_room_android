@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Magic Room</string>
+    <string name="lastOpenTitle">Open rooms</string>
 </resources>

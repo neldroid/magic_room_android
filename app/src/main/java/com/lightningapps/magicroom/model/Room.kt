@@ -5,21 +5,22 @@ data class Room(
     val title: String,
     val lastMessage: String,
     val reactions: MutableList<Reaction>,
-    val capacity: Capacity
+    val capacity: Capacity,
+    val backgroundColor: String
 ) {
     constructor() : this(
         "",
         "",
         "",
         mutableListOf(),
-        Capacity(0, 0, 0)
+        Capacity(0, 0),
+        ""
     )
 }
 
 data class Capacity(
     val total: Int,
-    val current: Int,
-    val remaining: Int
+    val current: Int
 ) {
-    constructor() : this(0, 0, 0)
+    constructor() : this(0, 0)
 }

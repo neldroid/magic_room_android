@@ -4,6 +4,6 @@ import androidx.compose.runtime.Composable
 import com.lightningapps.magicroom.presentation.viewmodel.room.RoomViewModel
 
 @Composable
-fun HomeComponent(roomViewModel: RoomViewModel) {
-    RoomsComponent(roomViewModel = roomViewModel)
+fun HomeComponent(roomViewModel: RoomViewModel, clickAvailableRoom: () -> Unit) {
+    LastOpenRoomsComponent(roomViewModel = roomViewModel, clickAvailableRoom)
 }
