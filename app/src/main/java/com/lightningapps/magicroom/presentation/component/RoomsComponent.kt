@@ -1,8 +1,6 @@
 package com.lightningapps.magicroom.presentation.component
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +34,9 @@ import com.lightningapps.magicroom.model.Reaction
 import com.lightningapps.magicroom.model.Room
 import com.lightningapps.magicroom.presentation.viewmodel.helper.UIResult
 import com.lightningapps.magicroom.presentation.viewmodel.room.RoomViewModel
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.Date
 
 @Composable
 fun LastOpenRoomsComponent(roomViewModel: RoomViewModel, clickAvailableRoom: () -> Unit) {
@@ -44,18 +45,14 @@ fun LastOpenRoomsComponent(roomViewModel: RoomViewModel, clickAvailableRoom: () 
     Column(modifier = Modifier.padding(8.dp)) {
         Text(
             text = stringResource(id = R.string.lastOpenTitle),
-            modifier = Modifier.padding(end = 8.dp)
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(8.dp)
         )
 
         when (availableRoomsResult) {
-            is UIResult.Error -> {
-//            Text(text = (availableRoomsResult as UIResult.Error).exception?.message.toString())
-            }
-
             UIResult.Loading -> {
                 CircularProgressIndicator()
             }
-
             is UIResult.SuccessRooms -> {
                 RoomsRow(
                     rooms = (availableRoomsResult as UIResult.SuccessRooms).value,
@@ -109,28 +106,37 @@ fun OpenRoomItem(room: Room, clickAvailableRoom: () -> Unit) {
                 ReactionComponent(room.reactions, roomColor)
             }
             Text(
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 text = room.lastMessage,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
+            TimeRoomComponent(room.closingTime)
         }
     }
 }
 
 @Composable
-fun ReactionComponent(reactions: List<Reaction>, roomColor: Color) {
+fun TimeRoomComponent(closingTime: Date) {
+    Text(modifier = Modifier.padding(top = 8.dp),
+        style = MaterialTheme.typography.bodySmall,
+        text = stringResource(id = R.string.closingTime, SimpleDateFormat("HH:mm").format(closingTime)))
+}
+
+@Composable
+fun ReactionComponent(reactions: MutableList<Reaction>, roomColor: Color) {
     Row(
         modifier = Modifier
             .padding(top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (reactions[1] != null) {
+        if (reactions.size == 2) {
             EmojiText(reactions[1].emojiCode)
             Spacer(modifier = Modifier.padding(end = 4.dp))
         }
-        EmojiText(reactions[1].emojiCode, roomColor, true)
-        if (reactions[2] != null) {
+        // Always set [0] already asked for .size > 0
+        EmojiText(reactions[0].emojiCode, roomColor, true)
+        if (reactions.size == 3) {
             Spacer(modifier = Modifier.padding(start = 4.dp))
             EmojiText(reactions[2].emojiCode)
         }
@@ -165,7 +171,8 @@ fun CheckRowPreview() {
             "This is the last message in the chat room",
             mutableListOf(Reaction("\uD83C\uDF36️", 5), Reaction("❤️", 3)),
             Capacity(20, 15),
-            "#9CCC65"
+            "#9CCC65",
+            Date.from(Instant.now())
         ),
         clickAvailableRoom = { }
     )

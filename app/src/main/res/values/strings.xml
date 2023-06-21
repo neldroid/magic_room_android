@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Magic Room</string>
     <string name="lastOpenTitle">Open rooms</string>
+    <string name="closingTime">Close at: %1$s</string>
 </resources>
