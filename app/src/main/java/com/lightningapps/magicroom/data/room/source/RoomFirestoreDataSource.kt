@@ -11,4 +11,7 @@ class RoomFirestoreDataSource @Inject constructor(
 
     fun getAvailableRooms() =
         retrieveCollection<Room>(firestore.collection(ROOMS))
+
+    fun getOpenSoonRooms() =
+        retrieveCollection<Room>(firestore.collection(ROOMS))
 }

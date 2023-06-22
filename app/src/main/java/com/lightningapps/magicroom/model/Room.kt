@@ -11,16 +11,18 @@ data class Room(
     val reactions: MutableList<Reaction>,
     val capacity: Capacity,
     val backgroundColor: String,
-    val closingTime: Date
+    val closingTime: Date,
+    val user: User
 ) {
     constructor() : this(
         "",
         "",
         "",
         mutableListOf(),
-        Capacity(0, 0),
+        Capacity(),
         "",
-        Date.from(Instant.now())
+        Date.from(Instant.now()),
+        User()
     )
 }
 

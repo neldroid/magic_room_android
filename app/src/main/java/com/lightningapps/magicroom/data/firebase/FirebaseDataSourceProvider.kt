@@ -2,6 +2,7 @@ package com.lightningapps.magicroom.data.firebase
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.lightningapps.magicroom.data.helper.FirestoreResult
 import kotlinx.coroutines.cancel
@@ -11,6 +12,9 @@ import kotlinx.coroutines.flow.callbackFlow
 
 open class FirebaseDataSourceProvider {
 
+//    inline fun <reified T> retrieveQuery(reference: Query): Flow<FirestoreResult>{
+//        
+//    }
     inline fun <reified T> retrieveCollection(reference: CollectionReference): Flow<FirestoreResult> =
         callbackFlow {
             val subscription = reference.addSnapshotListener { snapshot, error ->

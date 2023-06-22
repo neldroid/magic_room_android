@@ -7,10 +7,13 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.lightningapps.magicroom.presentation.component.LastOpenRoomsComponent
+import com.lightningapps.magicroom.presentation.component.room.LastOpenRoomsComponent
+import com.lightningapps.magicroom.presentation.component.room.OpenSoonRooms
 import com.lightningapps.magicroom.presentation.theme.MagicRoomTheme
-import com.lightningapps.magicroom.presentation.viewmodel.room.RoomViewModel
+import com.lightningapps.magicroom.presentation.viewmodel.room.HomeRoomViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,8 +28,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val roomViewModel by viewModels<RoomViewModel>()
-                    LastOpenRoomsComponent(roomViewModel = roomViewModel, {})
+                    val roomViewModel by viewModels<HomeRoomViewModel>()
+                    val availableRoomsResult by roomViewModel.availableRoomsStateFlow.collectAsState()
+                    val openSoonRoomsResult by roomViewModel.openSoonRoomsStateFlow.collectAsState()
+
+                    LastOpenRoomsComponent(availableRoomsResult, {})
+                    OpenSoonRooms(openSoonResult = openSoonRoomsResult, {})
                 }
             }
         }

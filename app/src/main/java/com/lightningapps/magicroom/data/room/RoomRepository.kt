@@ -33,5 +33,8 @@ class RoomRepository @Inject constructor(
             }
         }
 
+    override fun getOpenSoonRooms(): Flow<FirestoreResult> =
+        roomFirestoreDataSource.getOpenSoonRooms()
+
 
 }

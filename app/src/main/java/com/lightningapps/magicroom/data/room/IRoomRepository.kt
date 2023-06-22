@@ -8,4 +8,6 @@ interface IRoomRepository {
 
     fun getAvailableRooms(): Flow<FirestoreResult>
 
+    fun getOpenSoonRooms(): Flow<FirestoreResult>
+
 }

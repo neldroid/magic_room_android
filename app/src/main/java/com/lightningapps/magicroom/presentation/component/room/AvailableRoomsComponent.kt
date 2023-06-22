@@ -1,4 +1,4 @@
-package com.lightningapps.magicroom.presentation.component
+package com.lightningapps.magicroom.presentation.component.room
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -16,8 +18,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,15 +32,14 @@ import com.lightningapps.magicroom.R
 import com.lightningapps.magicroom.model.Capacity
 import com.lightningapps.magicroom.model.Reaction
 import com.lightningapps.magicroom.model.Room
+import com.lightningapps.magicroom.model.User
 import com.lightningapps.magicroom.presentation.viewmodel.helper.UIResult
-import com.lightningapps.magicroom.presentation.viewmodel.room.RoomViewModel
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
 
 @Composable
-fun LastOpenRoomsComponent(roomViewModel: RoomViewModel, clickAvailableRoom: () -> Unit) {
-    val availableRoomsResult by roomViewModel.roomStateFlow.collectAsState()
+fun LastOpenRoomsComponent(availableRoomsResult: UIResult, clickAvailableRoom: () -> Unit) {
 
     Column(modifier = Modifier.padding(8.dp)) {
         Text(
@@ -67,8 +66,8 @@ fun LastOpenRoomsComponent(roomViewModel: RoomViewModel, clickAvailableRoom: () 
 
 @Composable
 fun RoomsRow(rooms: List<Room>, clickAvailableRoom: () -> Unit) {
-    Row {
-        rooms.forEach { room ->
+    LazyRow {
+        items(rooms){room ->
             OpenRoomItem(room, clickAvailableRoom)
         }
     }
@@ -172,7 +171,8 @@ fun CheckRowPreview() {
             mutableListOf(Reaction("\uD83C\uDF36️", 5), Reaction("❤️", 3)),
             Capacity(20, 15),
             "#9CCC65",
-            Date.from(Instant.now())
+            Date.from(Instant.now()),
+            User()
         ),
         clickAvailableRoom = { }
     )
