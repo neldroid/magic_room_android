@@ -2,7 +2,7 @@ package com.lightningapps.magicroom.data.helper
 
 import java.lang.Exception
 
-sealed class FirestoreResult {
+open class FirestoreResult {
 
     data class Success<T>(val result: T) : FirestoreResult()
 

@@ -29,7 +29,6 @@ class RoomRepository @Inject constructor(
                         }
                     }
                 }
-                is FirestoreResult.ErrorResult -> TODO()
             }
         }
 
