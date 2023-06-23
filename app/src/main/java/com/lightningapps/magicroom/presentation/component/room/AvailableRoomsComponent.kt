@@ -54,7 +54,7 @@ fun LastOpenRoomsComponent(availableRoomsResult: UIResult, clickAvailableRoom: (
             }
             is UIResult.SuccessRooms -> {
                 RoomsRow(
-                    rooms = (availableRoomsResult as UIResult.SuccessRooms).value,
+                    rooms = availableRoomsResult.value,
                     clickAvailableRoom
                 )
             }

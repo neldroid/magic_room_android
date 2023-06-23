@@ -12,24 +12,22 @@ import kotlinx.coroutines.flow.callbackFlow
 
 open class FirebaseDataSourceProvider {
 
-//    inline fun <reified T> retrieveQuery(reference: Query): Flow<FirestoreResult>{
-//        
-//    }
-    inline fun <reified T> retrieveCollection(reference: CollectionReference): Flow<FirestoreResult> =
-        callbackFlow {
-            val subscription = reference.addSnapshotListener { snapshot, error ->
-                if (error == null) {
-                    if (snapshot != null) {
-                        trySend(FirestoreResult.Success(snapshot.toObjects(T::class.java)))
-                    }
-                } else {
-                    trySend(FirestoreResult.ErrorResult(error))
-                    cancel(error.message.toString())
+    inline fun <reified T> retrieveQuery(reference: Query): Flow<FirestoreResult> = callbackFlow{
+        val subscription = reference.addSnapshotListener { snapshot, error ->
+            if (error == null) {
+                if (snapshot != null) {
+                    trySend(FirestoreResult.Success(snapshot.toObjects(T::class.java)))
                 }
+            } else {
+                trySend(FirestoreResult.ErrorResult(error))
+                cancel(error.message.toString())
             }
-
-            awaitClose { subscription.remove() }
         }
+
+        awaitClose { subscription.remove() }
+    }
+    inline fun <reified T> retrieveCollection(reference: CollectionReference): Flow<FirestoreResult> =
+       retrieveQuery<T>(reference)
 
     inline fun <reified T> retrieveDocument(reference: DocumentReference): Flow<FirestoreResult> =
         callbackFlow {
@@ -50,6 +48,8 @@ open class FirebaseDataSourceProvider {
     companion object {
         const val USERS = "users"
         const val ROOMS = "rooms"
+        const val ROOM_OPEN = "open"
+
         const val CARDS = "cards"
         const val REACTIONS = "reactions"
     }
