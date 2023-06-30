@@ -16,7 +16,7 @@ import com.lightningapps.magicroom.model.Room
 import com.lightningapps.magicroom.presentation.viewmodel.helper.UIResult
 
 @Composable
-fun OpenSoonRooms(openSoonResult: UIResult, clickOpenRoomNotify: () -> Unit){
+fun OpenSoonRooms(openSoonResult: UIResult, clickOpenRoomNotify: () -> Unit) {
     Column(modifier = Modifier.padding(8.dp)) {
         Text(
             text = stringResource(id = R.string.openSoonTitle),
@@ -28,8 +28,13 @@ fun OpenSoonRooms(openSoonResult: UIResult, clickOpenRoomNotify: () -> Unit){
             UIResult.Loading -> {
                 CircularProgressIndicator()
             }
+
             is UIResult.SuccessRooms -> {
-                RoomsComponent(openSoonResult.value)
+                RoomsComponent(openSoonResult.rooms)
+            }
+
+            is UIResult.Error -> {
+                Text(openSoonResult.exception?.message.toString())
             }
         }
     }
@@ -38,9 +43,16 @@ fun OpenSoonRooms(openSoonResult: UIResult, clickOpenRoomNotify: () -> Unit){
 
 @Composable
 fun RoomsComponent(rooms: List<Room>) {
-    LazyColumn{
-        items(rooms){room ->
-            OpenSoonRoomItem(room)
+    if (rooms.isEmpty()) {
+        Text(
+            modifier = Modifier.padding(16.dp),
+            text = stringResource(id = R.string.nonOpenSoonRooms)
+        )
+    } else {
+        LazyColumn {
+            items(rooms) { room ->
+                OpenSoonRoomItem(room)
+            }
         }
     }
 }

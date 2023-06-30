@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.lightningapps.magicroom.presentation.component.room.LastOpenRoomsComponent
-import com.lightningapps.magicroom.presentation.viewmodel.room.HomeRoomViewModel
+import com.lightningapps.magicroom.presentation.viewmodel.HomeRoomViewModel
 
 @Composable
 fun HomeComponent(roomViewModel: HomeRoomViewModel, clickAvailableRoom: () -> Unit) {

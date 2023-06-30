@@ -3,4 +3,6 @@
     <string name="lastOpenTitle">Open rooms</string>
     <string name="closingTime">Close at: %1$s</string>
     <string name="openSoonTitle">Open soon</string>
+    <string name="nonOpenSoonRooms">There are not open soon rooms in this moment.</string>
+    <string name="addContentDescription">Add Room Button</string>
 </resources>

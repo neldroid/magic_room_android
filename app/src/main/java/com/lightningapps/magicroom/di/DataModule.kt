@@ -5,10 +5,14 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.lightningapps.magicroom.data.room.IRoomRepository
 import com.lightningapps.magicroom.data.room.RoomRepository
+import com.lightningapps.magicroom.data.user.IUserRepository
+import com.lightningapps.magicroom.data.user.UserRepository
+import com.lightningapps.magicroom.presentation.viewmodel.room.RoomViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 
 @Module
@@ -26,4 +30,6 @@ object DataModule {
 interface RepositoryModules {
     @Binds
     fun providesRoomRepository(repository: RoomRepository): IRoomRepository
+    @Binds
+    fun providesUserRepository(repository: UserRepository): IUserRepository
 }

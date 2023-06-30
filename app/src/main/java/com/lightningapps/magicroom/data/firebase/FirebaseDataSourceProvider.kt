@@ -5,12 +5,17 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.lightningapps.magicroom.data.helper.FirestoreResult
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
 
-open class FirebaseDataSourceProvider {
+open class FirebaseDataSourceProvider constructor(
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) {
 
     inline fun <reified T> retrieveQuery(reference: Query): Flow<FirestoreResult> = callbackFlow{
         val subscription = reference.addSnapshotListener { snapshot, error ->
