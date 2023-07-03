@@ -32,6 +32,7 @@ import com.lightningapps.magicroom.presentation.component.room.LastOpenRoomsComp
 import com.lightningapps.magicroom.presentation.component.room.OpenSoonRooms
 import com.lightningapps.magicroom.presentation.theme.MagicRoomTheme
 import com.lightningapps.magicroom.presentation.viewmodel.HomeRoomViewModel
+import com.lightningapps.magicroom.presentation.viewmodel.helper.UIResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -42,17 +43,21 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            MagicRoomTheme {
+
+            val homeViewModel by viewModels<HomeRoomViewModel>()
+            val availableRoomsResult by homeViewModel.availableRoomsStateFlow.collectAsState()
+            val openSoonRoomsResult by homeViewModel.openSoonRoomsStateFlow.collectAsState()
+            val basicUserInformation by homeViewModel.basicUserInfoStateFlow.collectAsState()
+
+            MagicRoomTheme(darkTheme = showDarkTheme(basicUserInformation)) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val homeViewModel by viewModels<HomeRoomViewModel>()
-                    val availableRoomsResult by homeViewModel.availableRoomsStateFlow.collectAsState()
-                    val openSoonRoomsResult by homeViewModel.openSoonRoomsStateFlow.collectAsState()
-                    val basicUserInformation by homeViewModel.basicUserInfoStateFlow.collectAsState()
+
 
                     Scaffold(topBar = {
                         UserHomeTopAppBar(basicUserInformation)
@@ -78,4 +83,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun showDarkTheme(basicUserInformation: UIResult): Boolean =
+        if (basicUserInformation is UIResult.SuccessUser) {
+            val userResponse = basicUserInformation as UIResult.SuccessUser
+            userResponse.user.life > 0
+        } else {
+            true
+        }
 }
