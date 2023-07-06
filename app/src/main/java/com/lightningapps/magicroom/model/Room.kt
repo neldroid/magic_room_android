@@ -7,6 +7,7 @@ import java.util.Date
 data class Room(
     val id: String,
     val title: String,
+    val description: String,
     val lastMessage: String,
     val reactions: MutableList<Reaction>,
     val capacity: Capacity,
@@ -15,6 +16,7 @@ data class Room(
     val user: User
 ) {
     constructor() : this(
+        "",
         "",
         "",
         "",

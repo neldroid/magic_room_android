@@ -167,6 +167,7 @@ fun CheckRowPreview() {
         room = Room(
             "",
             "Title room",
+            "This is the description",
             "This is the last message in the chat room",
             mutableListOf(Reaction("\uD83C\uDF36️", 5), Reaction("❤️", 3)),
             Capacity(20, 15),

@@ -3,6 +3,7 @@ package com.lightningapps.magicroom.presentation.viewmodel.room
 import androidx.lifecycle.ViewModel
 import com.lightningapps.magicroom.data.helper.FirestoreResult
 import com.lightningapps.magicroom.data.room.IRoomRepository
+import com.lightningapps.magicroom.model.LocalSavedRoom
 import com.lightningapps.magicroom.model.Room
 import com.lightningapps.magicroom.presentation.viewmodel.helper.UIResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +33,8 @@ class RoomViewModel @Inject constructor(
 
                 is FirestoreResult.Success<*> -> {
                     val rooms = repositoryResult.result as List<Room>
-                    mutableOpenSoonRoomsStateFlow.value = UIResult.SuccessRooms(rooms)
+                    val localSavedRoom = rooms.map { LocalSavedRoom(it, true) }
+                    mutableOpenSoonRoomsStateFlow.value = UIResult.SuccessLocalRooms(localSavedRoom)
                 }
             }
         }
