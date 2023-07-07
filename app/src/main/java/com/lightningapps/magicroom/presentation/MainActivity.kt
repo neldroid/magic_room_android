@@ -32,6 +32,7 @@ import com.lightningapps.magicroom.presentation.component.room.LastOpenRoomsComp
 import com.lightningapps.magicroom.presentation.component.room.OpenSoonRooms
 import com.lightningapps.magicroom.presentation.theme.MagicRoomTheme
 import com.lightningapps.magicroom.presentation.viewmodel.HomeRoomViewModel
+import com.lightningapps.magicroom.presentation.viewmodel.helper.UIResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -43,16 +44,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MagicRoomTheme {
+            val homeViewModel by viewModels<HomeRoomViewModel>()
+
+            val availableRoomsResult by homeViewModel.availableRoomsStateFlow.collectAsState()
+            val openSoonRoomsResult by homeViewModel.openSoonRoomsStateFlow.collectAsState()
+            val basicUserInformation by homeViewModel.basicUserInfoStateFlow.collectAsState()
+
+            MagicRoomTheme(darkTheme = isUserAlive(basicUserInformation)) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val homeViewModel by viewModels<HomeRoomViewModel>()
-                    val availableRoomsResult by homeViewModel.availableRoomsStateFlow.collectAsState()
-                    val openSoonRoomsResult by homeViewModel.openSoonRoomsStateFlow.collectAsState()
-                    val basicUserInformation by homeViewModel.basicUserInfoStateFlow.collectAsState()
+
 
                     Scaffold(topBar = {
                         UserHomeTopAppBar(basicUserInformation)
@@ -71,11 +75,19 @@ class MainActivity : ComponentActivity() {
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             LastOpenRoomsComponent(availableRoomsResult, {})
-                            OpenSoonRooms(openSoonResult = openSoonRoomsResult, {})
+                            OpenSoonRooms(openSoonResult = openSoonRoomsResult, clickOpenRoomNotify = {})
                         }
                     }
                 }
             }
         }
     }
+
+    private fun isUserAlive(basicUserInformation: UIResult) =
+        if (basicUserInformation is UIResult.SuccessUser) {
+            basicUserInformation.user.life > 0
+        } else {
+            false
+        }
+
 }

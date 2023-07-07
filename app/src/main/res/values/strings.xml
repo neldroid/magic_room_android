@@ -6,4 +6,5 @@
     <string name="nonOpenSoonRooms">There are not open soon rooms in this moment.</string>
     <string name="addContentDescription">Add Room Button</string>
     <string name="notificationContentDescription">Notification icon</string>
+    <string name="createdBy">Created by: %1$s</string>
 </resources>
