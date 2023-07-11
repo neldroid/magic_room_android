@@ -7,8 +7,10 @@ import com.lightningapps.magicroom.model.LocalSavedRoom
 import com.lightningapps.magicroom.model.Room
 import com.lightningapps.magicroom.model.User
 import com.lightningapps.magicroom.presentation.viewmodel.helper.UIResult
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /*
@@ -41,8 +43,11 @@ class HomeInformationUseCase @Inject constructor(
                 is FirestoreResult.Success<*> -> {
                     val userBasicInformation = userRepositoryResult.result as User
                     val isAlive = userBasicInformation.life > 0
-                    collectAvailableRooms(isAlive)
-                    collectOpenSoonRooms(isAlive)
+                    coroutineScope {
+                        launch { collectAvailableRooms(isAlive) }
+                        launch { collectOpenSoonRooms(isAlive) }
+                    }
+
 
                     mutableBasicInfoStateFlow.value = UIResult.SuccessUser(userBasicInformation)
                 }
