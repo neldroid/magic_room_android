@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface IRoomRepository {
 
-    fun getAvailableRooms(): Flow<FirestoreResult>
+    fun getAvailableRooms(isAlive: Boolean): Flow<FirestoreResult>
 
-    fun getOpenSoonRooms(): Flow<FirestoreResult>
+    fun getOpenSoonRooms(isAlive: Boolean): Flow<FirestoreResult>
 
 }

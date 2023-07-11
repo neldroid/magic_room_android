@@ -45,20 +45,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
             val homeViewModel by viewModels<HomeRoomViewModel>()
             val availableRoomsResult by homeViewModel.availableRoomsStateFlow.collectAsState()
             val openSoonRoomsResult by homeViewModel.openSoonRoomsStateFlow.collectAsState()
             val basicUserInformation by homeViewModel.basicUserInfoStateFlow.collectAsState()
 
-            MagicRoomTheme(darkTheme = showDarkTheme(basicUserInformation)) {
+            MagicRoomTheme(darkTheme = isUserAlive(basicUserInformation)) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
-
                     Scaffold(topBar = {
                         UserHomeTopAppBar(basicUserInformation)
                     },
@@ -76,7 +73,7 @@ class MainActivity : ComponentActivity() {
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             LastOpenRoomsComponent(availableRoomsResult, {})
-                            OpenSoonRooms(openSoonResult = openSoonRoomsResult, {})
+                            OpenSoonRooms(openSoonResult = openSoonRoomsResult, clickOpenRoomNotify = {})
                         }
                     }
                 }
@@ -84,11 +81,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun showDarkTheme(basicUserInformation: UIResult): Boolean =
+    private fun isUserAlive(basicUserInformation: UIResult) =
         if (basicUserInformation is UIResult.SuccessUser) {
-            val userResponse = basicUserInformation as UIResult.SuccessUser
-            userResponse.user.life > 0
+            basicUserInformation.user.life > 0
         } else {
-            true
+            false
         }
 }

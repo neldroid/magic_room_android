@@ -46,9 +46,6 @@ fun MagicRoomTheme(
     darkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
-    /*
-    TODO change the color selection dark as default and light when the user lost life an it's in the spirit realm
-     */
     val colorScheme = when {
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
