@@ -9,8 +9,8 @@ data class User(
     val gems: Int,
     val life: Int,
     val messageConfiguration: MessageConfiguration
-){
-    constructor(): this(
+) {
+    constructor() : this(
         "",
         "",
         0,
@@ -25,8 +25,8 @@ data class MessageConfiguration(
     val nickname: String,
     val size: Int,
     val waitingTime: Int
-){
-    constructor(): this(
+) {
+    constructor() : this(
         0,
         false,
         "",

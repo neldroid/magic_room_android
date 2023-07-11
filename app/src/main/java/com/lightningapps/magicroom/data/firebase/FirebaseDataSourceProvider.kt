@@ -47,14 +47,16 @@ open class FirebaseDataSourceProvider constructor(
                 }
             }
 
-            awaitClose { subscription.remove() }
+            awaitClose {
+                subscription.remove()
+            }
         }
 
     companion object {
         const val USERS = "users"
         const val ROOMS = "rooms"
         const val ROOM_OPEN = "open"
-
+        const val SPIRIT_REALM = "spiritRealm"
         const val CARDS = "cards"
         const val REACTIONS = "reactions"
     }

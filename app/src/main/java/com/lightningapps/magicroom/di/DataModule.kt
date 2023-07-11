@@ -7,7 +7,6 @@ import com.lightningapps.magicroom.data.room.IRoomRepository
 import com.lightningapps.magicroom.data.room.RoomRepository
 import com.lightningapps.magicroom.data.user.IUserRepository
 import com.lightningapps.magicroom.data.user.UserRepository
-import com.lightningapps.magicroom.presentation.viewmodel.room.RoomViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

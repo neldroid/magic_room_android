@@ -13,17 +13,19 @@ class RoomFirestoreDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ): FirebaseDataSourceProvider() {
 
-    fun getAvailableRooms(): Flow<FirestoreResult> {
+    fun getAvailableRooms(isAlive: Boolean): Flow<FirestoreResult> {
         val query = firestore.collection(ROOMS)
             .whereEqualTo(ROOM_OPEN, true)
+            .whereEqualTo(SPIRIT_REALM, !isAlive)
             .limit(10)
 
         return retrieveQuery<Room>(query).flowOn(Dispatchers.IO)
     }
 
-    fun getOpenSoonRooms(): Flow<FirestoreResult> {
+    fun getOpenSoonRooms(isAlive: Boolean): Flow<FirestoreResult> {
         val query = firestore.collection(ROOMS)
             .whereEqualTo(ROOM_OPEN, false)
+            .whereEqualTo(SPIRIT_REALM, !isAlive)
 
         return retrieveQuery<Room>(query).flowOn(Dispatchers.IO)
     }

@@ -19,8 +19,8 @@ class RoomRepository @Inject constructor(
     private val reactionFirestoreDataSource: ReactionFirestoreDataSource
 ) : IRoomRepository {
 
-    override fun getAvailableRooms(): Flow<FirestoreResult> =
-        (roomFirestoreDataSource.getAvailableRooms()).onEach { firestoreResult ->
+    override fun getAvailableRooms(isAlive: Boolean): Flow<FirestoreResult> =
+        (roomFirestoreDataSource.getAvailableRooms(isAlive)).onEach { firestoreResult ->
             when (firestoreResult){
                 is FirestoreResult.Success<*> -> {
                     val rooms = firestoreResult.result as List<Room>
@@ -33,8 +33,8 @@ class RoomRepository @Inject constructor(
             }
         }
 
-    override fun getOpenSoonRooms(): Flow<FirestoreResult> =
-        roomFirestoreDataSource.getOpenSoonRooms()
+    override fun getOpenSoonRooms(isAlive: Boolean): Flow<FirestoreResult> =
+        roomFirestoreDataSource.getOpenSoonRooms(isAlive)
 
 
 }
