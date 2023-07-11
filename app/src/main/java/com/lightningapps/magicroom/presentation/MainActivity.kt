@@ -43,9 +43,9 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val homeViewModel by viewModels<HomeRoomViewModel>()
-
             val availableRoomsResult by homeViewModel.availableRoomsStateFlow.collectAsState()
             val openSoonRoomsResult by homeViewModel.openSoonRoomsStateFlow.collectAsState()
             val basicUserInformation by homeViewModel.basicUserInfoStateFlow.collectAsState()
@@ -87,5 +87,4 @@ class MainActivity : ComponentActivity() {
         } else {
             false
         }
-
 }

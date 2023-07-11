@@ -43,7 +43,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun MagicRoomTheme(
-    darkTheme: Boolean = true,
+    darkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
