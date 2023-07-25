@@ -10,4 +10,6 @@ interface IRoomRepository {
 
     fun getOpenSoonRooms(isAlive: Boolean): Flow<FirestoreResult>
 
+    fun getRoomWaitingInformation(roomId: String): Flow<FirestoreResult>
+
 }
