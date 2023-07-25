@@ -1,5 +1,6 @@
 package com.lightningapps.magicroom.domain
 
+import android.util.Log
 import com.lightningapps.magicroom.data.helper.FirestoreResult
 import com.lightningapps.magicroom.data.room.IRoomRepository
 import com.lightningapps.magicroom.data.user.IUserRepository
@@ -10,6 +11,7 @@ import com.lightningapps.magicroom.presentation.viewmodel.helper.UIResult
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,21 +40,24 @@ class HomeInformationUseCase @Inject constructor(
     Get the user information first. With the user life could determine if need to show rooms normal or from the spirit realm
      */
     suspend operator fun invoke() {
+        var isAlive = false
         userRepository.getBasicUserInformation().collect { userRepositoryResult ->
             when (userRepositoryResult) {
                 is FirestoreResult.Success<*> -> {
                     val userBasicInformation = userRepositoryResult.result as User
-                    val isAlive = userBasicInformation.life > 0
-                    coroutineScope {
-                        launch { collectAvailableRooms(isAlive) }
-                        launch { collectOpenSoonRooms(isAlive) }
-                    }
-
-
+                    isAlive = userBasicInformation.life > 0
                     mutableBasicInfoStateFlow.value = UIResult.SuccessUser(userBasicInformation)
                 }
             }
+            collectOpenSoonRooms(isAlive)
+            collectAvailableRooms(isAlive)
         }
+//        coroutineScope {
+//            launch {
+//            }
+//            launch {
+//            }
+//        }
     }
 
     private suspend fun collectOpenSoonRooms(isAlive: Boolean) {
