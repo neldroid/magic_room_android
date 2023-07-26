@@ -11,7 +11,12 @@ import com.lightningapps.magicroom.presentation.viewmodel.helper.UIResult
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,28 +45,30 @@ class HomeInformationUseCase @Inject constructor(
     Get the user information first. With the user life could determine if need to show rooms normal or from the spirit realm
      */
     suspend operator fun invoke() {
-        var isAlive = false
-        userRepository.getBasicUserInformation().collect { userRepositoryResult ->
-            when (userRepositoryResult) {
-                is FirestoreResult.Success<*> -> {
-                    val userBasicInformation = userRepositoryResult.result as User
-                    isAlive = userBasicInformation.life > 0
-                    mutableBasicInfoStateFlow.value = UIResult.SuccessUser(userBasicInformation)
-                }
+        userRepository.getBasicUserInformation()
+            .collect {
+                val isAlive = retrieveUserInformation(it)
+                collectAvailableRooms(isAlive)
+                collectOpenSoonRooms(isAlive)
             }
-            collectOpenSoonRooms(isAlive)
-            collectAvailableRooms(isAlive)
-        }
-//        coroutineScope {
-//            launch {
-//            }
-//            launch {
-//            }
-//        }
     }
 
+    private fun retrieveUserInformation(userRepositoryResult: FirestoreResult) =
+        when (userRepositoryResult) {
+            is FirestoreResult.Success<*> -> {
+                val userBasicInformation = userRepositoryResult.result as User
+                mutableBasicInfoStateFlow.value = UIResult.SuccessUser(userBasicInformation)
+                userBasicInformation.life > 0
+            }
+
+            else -> {
+                false
+            }
+        }
+
+
     private suspend fun collectOpenSoonRooms(isAlive: Boolean) {
-        roomRepository.getOpenSoonRooms(isAlive).collect { repositoryResult ->
+        roomRepository.getOpenSoonRooms(isAlive).first { repositoryResult ->
             when (repositoryResult) {
                 is FirestoreResult.ErrorResult -> mutableOpenSoonRoomsStateFlow.value =
                     UIResult.Error(repositoryResult.exception)
@@ -72,12 +79,13 @@ class HomeInformationUseCase @Inject constructor(
                     mutableOpenSoonRoomsStateFlow.value = UIResult.SuccessLocalRooms(localSavedRoom)
                 }
             }
+            true
         }
     }
 
     private suspend fun collectAvailableRooms(isAlive: Boolean) {
         roomRepository.getAvailableRooms(isAlive)
-            .collect { repositoryResult ->
+            .first { repositoryResult ->
                 when (repositoryResult) {
                     is FirestoreResult.ErrorResult -> mutableAvailableRoomsStateFlow.value =
                         UIResult.Error(repositoryResult.exception)
@@ -87,6 +95,7 @@ class HomeInformationUseCase @Inject constructor(
                         mutableAvailableRoomsStateFlow.value = UIResult.SuccessRooms(rooms)
                     }
                 }
+                true
             }
     }
 

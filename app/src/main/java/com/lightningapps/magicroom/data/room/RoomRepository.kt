@@ -36,5 +36,9 @@ class RoomRepository @Inject constructor(
     override fun getOpenSoonRooms(isAlive: Boolean): Flow<FirestoreResult> =
         roomFirestoreDataSource.getOpenSoonRooms(isAlive)
 
+    override fun getRoomWaitingInformation(roomId: String): Flow<FirestoreResult> {
+        TODO("Not yet implemented")
+    }
+
 
 }
