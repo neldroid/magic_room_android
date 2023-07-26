@@ -24,13 +24,9 @@ fun WaitingScreen(waitingScreenResult: UIResult) =
 
 @Composable
 fun ScreenContent(information: Room) {
-    TitleSection(information.title, information.description)
-}
-
-@Composable
-fun TitleSection(title: String, description: String) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = title, style = MaterialTheme.typography.titleMedium)
-        Text(text = description, style = MaterialTheme.typography.bodyMedium)
+        Text(text = information.title, style = MaterialTheme.typography.titleMedium)
+        Text(text = information.description, style = MaterialTheme.typography.bodyMedium)
+
     }
 }
