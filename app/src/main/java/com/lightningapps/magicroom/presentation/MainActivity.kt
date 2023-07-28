@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.lightningapps.magicroom.R
 import com.lightningapps.magicroom.presentation.component.UserHomeTopAppBar
 import com.lightningapps.magicroom.presentation.component.room.LastOpenRoomsComponent

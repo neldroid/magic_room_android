@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -52,6 +54,7 @@ fun LastOpenRoomsComponent(availableRoomsResult: UIResult, clickAvailableRoom: (
             UIResult.Loading -> {
                 CircularProgressIndicator()
             }
+
             is UIResult.SuccessRooms -> {
                 RoomsRow(
                     rooms = availableRoomsResult.rooms,
@@ -66,8 +69,11 @@ fun LastOpenRoomsComponent(availableRoomsResult: UIResult, clickAvailableRoom: (
 
 @Composable
 fun RoomsRow(rooms: List<Room>, clickAvailableRoom: () -> Unit) {
-    LazyRow {
-        items(rooms){room ->
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth(),
+    ) {
+        items(rooms) { room ->
             OpenRoomItem(room, clickAvailableRoom)
         }
     }
@@ -78,33 +84,32 @@ Shows the room for the open ones. Use the reaction component
  */
 @Composable
 fun OpenRoomItem(room: Room, clickAvailableRoom: () -> Unit) {
-    val roomColor = Color(room.backgroundColor.toColorInt())
-
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = roomColor
+            containerColor = MaterialTheme.colorScheme.tertiary
         ),
         modifier = Modifier
-            .padding(4.dp)
-            .clickable(onClick = clickAvailableRoom)
-            .width(150.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            .padding(8.dp)
+            .clickable(onClick = clickAvailableRoom),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     ) {
         Column(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(16.dp)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 text = room.title
             )
             if (room.reactions.size > 0) {
                 // Show component only when at last is one reaction for the room
-                ReactionComponent(room.reactions, roomColor)
+                ReactionComponent(room.reactions)
             }
             Text(
+                modifier = Modifier
+                    .width(150.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 text = room.lastMessage,
                 maxLines = 2,
@@ -117,13 +122,18 @@ fun OpenRoomItem(room: Room, clickAvailableRoom: () -> Unit) {
 
 @Composable
 fun TimeRoomComponent(closingTime: Date) {
-    Text(modifier = Modifier.padding(top = 8.dp),
+    Text(
+        modifier = Modifier.padding(top = 8.dp),
         style = MaterialTheme.typography.bodySmall,
-        text = stringResource(id = R.string.closingTime, SimpleDateFormat("HH:mm").format(closingTime)))
+        text = stringResource(
+            id = R.string.closingTime,
+            SimpleDateFormat("HH:mm").format(closingTime)
+        )
+    )
 }
 
 @Composable
-fun ReactionComponent(reactions: MutableList<Reaction>, roomColor: Color) {
+fun ReactionComponent(reactions: MutableList<Reaction>) {
     Row(
         modifier = Modifier
             .padding(top = 8.dp, bottom = 8.dp),
@@ -134,7 +144,7 @@ fun ReactionComponent(reactions: MutableList<Reaction>, roomColor: Color) {
             Spacer(modifier = Modifier.padding(end = 4.dp))
         }
         // Always set [0] already asked for .size > 0
-        EmojiText(reactions[0].emojiCode, roomColor, true)
+        EmojiText(reactions[0].emojiCode, true)
         if (reactions.size == 3) {
             Spacer(modifier = Modifier.padding(start = 4.dp))
             EmojiText(reactions[2].emojiCode)
@@ -143,39 +153,50 @@ fun ReactionComponent(reactions: MutableList<Reaction>, roomColor: Color) {
 }
 
 @Composable
-fun EmojiText(emojiCode: String, roomColor: Color = Color.Black, mainEmoji: Boolean = false) {
+fun EmojiText(emojiCode: String, mainEmoji: Boolean = false) {
     Box(
         modifier = Modifier
-            .background(Color.White, CircleShape),
+            .background(MaterialTheme.colorScheme.primary, CircleShape)
+            .padding(8.dp),
     ) {
         Text(
             text = emojiCode,
-            modifier = Modifier
-                .padding(if (mainEmoji) 8.dp else 4.dp),
             style = TextStyle(
-                fontSize = if (mainEmoji) 15.sp else 10.sp
+                fontSize = if (mainEmoji) 30.sp else 20.sp
             )
 
         )
     }
 }
 
-@Preview
+@Preview(widthDp = 250)
 @Composable
 fun CheckRowPreview() {
-    OpenRoomItem(
-        room = Room(
-            "",
-            "Title room",
-            "This is the description",
-            "This is the last message in the chat room",
-            mutableListOf(Reaction("\uD83C\uDF36️", 5), Reaction("❤️", 3)),
-            Capacity(20, 15),
-            "#9CCC65",
-            Date.from(Instant.now()),
-            User()
-        ),
-        clickAvailableRoom = { }
+    RoomsRow(
+        rooms = listOf(
+            Room(
+                "",
+                "Title room",
+                "This is the description",
+                "This is the last message in the chat room",
+                mutableListOf(Reaction("\uD83C\uDF36️", 5), Reaction("❤️", 3)),
+                Capacity(20, 15),
+                "#9CCC65",
+                Date.from(Instant.now()),
+                User()
+            ),
+            Room(
+                "",
+                "Titulo de sala",
+                "Esta es la descripcion",
+                "Este es el ultimo mensaje de la sala",
+                mutableListOf(Reaction("❤️", 5)),
+                Capacity(20, 15),
+                "#9CCC65",
+                Date.from(Instant.now()),
+                User()
+            )
+        ), {}
     )
 }
 

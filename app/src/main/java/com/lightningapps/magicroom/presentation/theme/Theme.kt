@@ -12,21 +12,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
+    background = IndigoDark,
     primary = Indigo80,
     secondary = Indigo60,
-    tertiary = Indigo40,
-    background = IndigoDark,
+    tertiary = Color.White,
+    onTertiary = Color.Black
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Cyan80,
     secondary = Cyan60,
-    tertiary = Cyan40,
+    tertiary = Color.White,
+    onTertiary = Color.Black,
     background = Color.White,
     onPrimary = Color.White
 
@@ -61,7 +62,7 @@ fun MagicRoomTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = CustomTypography,
         content = content
     )
 }
